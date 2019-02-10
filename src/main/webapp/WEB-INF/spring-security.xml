@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns="http://www.springframework.org/schema/security"
+ xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+xmlns:tx="http://www.springframework.org/schema/tx"
+xmlns:context="http://www.springframework.org/schema/context"
+xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/security 
+		http://www.springframework.org/schema/security/spring-security-4.2.xsd
+http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+    http://www.springframework.org/schema/data/jpa 
+    http://www.springframework.org/schema/data/jpa/spring-jpa-1.8.xsd
+    http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.3.xsd
+">
+ 
+
+<jpa:repositories base-package="Repository" />
+
+<beans:bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <beans:property name="dataSource" ref="dataSource" />
+    <beans:property name="persistenceUnitName" value="springdataPU" />
+    <beans:property name="jpaVendorAdapter">
+        <beans:bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+    </beans:property>
+</beans:bean>
+
+
+ 
+ 
+<beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <beans:property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+    <beans:property name="url" value="jdbc:mysql://localhost:3306/quanlythuviensach" />
+    <beans:property name="username" value="root" />
+    <beans:property name="password" value="" />
+</beans:bean>
+
+
+<tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager"/>
+ 
+    <beans:bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <beans:property name="dataSource" ref="dataSource"/>
+    </beans:bean>
+  
+
+ 
+    <beans:bean id="restServicesEntryPoint"
+    class="securityConfig.RestAuthenticationEntryPoint" />
+    
+    <beans:bean id="customAccessDeniedHandler"
+    class="securityConfig.CustomAccessDeniedHandler" />
+    
+
+    
+    
+    <beans:bean id="corsHandler" class="securityConfig.CorsFilter" />
+
+
+
+    <http pattern="/Auth/**" auto-config="false" use-expressions="true"
+    create-session="stateless" entry-point-ref="restServicesEntryPoint" >
+    
+  
+   <form-login  login-page="/login.html"  login-processing-url="/Auth/login" username-parameter="username" password-parameter="password"
+   authentication-success-forward-url="/Auth/getToken"
+    authentication-failure-forward-url="/error"
+   
+   />
+   
+<logout  logout-url="/Auth/logout" />
+<csrf  disabled="true"/>
+
+  </http>
+  
+  
+  
+ 
+  
+  
+  
+  <authentication-manager alias="authenticationManager" erase-credentials="false">
+    <authentication-provider >
+<jdbc-user-service data-source-ref="dataSource"  users-by-username-query=
+"select username,password, enabled from users where username=?" 
+		    
+		    authorities-by-username-query="select username, role from user_roles where username =?  " 
+		    
+		    />
+    </authentication-provider>
+  </authentication-manager>
+  
+
+
+
+   
+</beans:beans>

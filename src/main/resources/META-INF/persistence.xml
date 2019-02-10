@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<persistence version="2.1"
+    xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+    <persistence-unit name="springdataPU" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>entity.khachhang</class>
+         <class>entity.loaikhachhang</class>
+         <class>entity.users</class>
+            <class>entity.book</class>
+    <class>entity.author</class>
+    <class>entity.bookchaptermanagement</class>
+    <class>entity.bookandauthor</class>
+    <class>entity.language</class>
+    <class>entity.user_roles</class>
+       <class>entity.booktype</class>
+       <class>entity.usertransaction</class>
+       <class>entity.bookrentandboughtexpiredtimemanagement</class>
+       <class>entity.rentpackage</class>
+       <class>entity.transactiondetail</class>
+       <class>entity.commentmanagement</class>
+        <exclude-unlisted-classes />
+        <properties>
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value="true" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
+            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
+            <property name="javax.persistence.validation.mode" value="none" />
+             <property name="hibernate.use_sql_comments" value="true" />
+             
+        </properties>
+    </persistence-unit>
+</persistence>
